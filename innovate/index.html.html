@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Innovate × Tiendanube Partner Board</title>
+<style>
+:root{color-scheme:light;--navy:#0050C3;--blue:#59A9FF;--bg:#F4F7FB;--card:#FFFFFF;--border:#DDE6F5;--text:#1A1A2E;--muted:#6B7A99;--done-bg:#E6F4EA;--done-text:#1E7E34;--inprogress-bg:#FFF8E1;--inprogress-text:#B8860B;--backlog-bg:#EFF3FB;--backlog-text:#4A6FA5;--delete:#E53935;--radius:10px;--shadow:0 2px 10px rgba(0,80,195,0.08);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;}
+.header{background:var(--navy);color:#fff;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-size:18px;font-weight:700;} .logo span{color:var(--blue);}
+.partner-badge{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;}
+.admin-badge{background:var(--blue);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;}
+.nav{background:var(--card);border-bottom:2px solid var(--border);display:flex;padding:0 28px;overflow-x:auto;}
+.nav-btn{padding:12px 18px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all 0.15s;}
+.nav-btn.active{color:var(--navy);border-bottom-color:var(--navy);}
+.main{padding:20px 28px;max-width:1400px;margin:0 auto;}
+.section{display:none;} .section.active{display:block;}
+.section-intro{font-size:13px;color:var(--muted);margin-bottom:18px;}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:18px;border:1px solid var(--border);}
+.card-title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+.kpi-sync{font-size:11px;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.hs-badge{background:#FF7A59;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media(max-width:900px){.kpi-grid{grid-template-columns:1fr;}}
+.kpi-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:18px;box-shadow:var(--shadow);}
+.kpi-card-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.kpi-cell{background:var(--bg);border-radius:8px;padding:10px 12px;}
+.kpi-track{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--blue);margin-bottom:3px;}
+.kpi-value{font-size:20px;font-weight:700;color:var(--navy);line-height:1;}
+.kpi-unit{font-size:11px;color:var(--muted);margin-top:2px;}
+.kpi-opps{font-size:12px;color:var(--muted);margin-top:3px;}
+.kpi-edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px;}
+.kpi-edit-group label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:var(--muted);display:block;margin-bottom:3px;}
+.kpi-edit-group input{width:100%;border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;color:var(--text);background:#fff;}
+.kpi-save-btn{margin-top:10px;width:100%;padding:7px;background:var(--navy);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;}
+.cat-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.cat-name{font-size:14px;font-weight:700;color:var(--navy);}
+.cat-icon{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:7px;}
+.kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.kanban-col{background:var(--bg);border-radius:var(--radius);padding:10px;min-height:80px;}
+.kanban-col-header{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;padding:3px 7px;border-radius:4px;display:inline-block;}
+.col-done .kanban-col-header{background:var(--done-bg);color:var(--done-text);}
+.col-inprogress .kanban-col-header{background:var(--inprogress-bg);color:var(--inprogress-text);}
+.col-backlog .kanban-col-header{background:var(--backlog-bg);color:var(--backlog-text);}
+.initiative-card{background:var(--card);border-radius:8px;padding:10px 12px;margin-bottom:7px;border:1px solid var(--border);cursor:pointer;transition:box-shadow 0.15s;}
+.initiative-card:hover{box-shadow:0 3px 10px rgba(0,80,195,0.1);}
+.init-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.init-meta{font-size:11px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;}
+.init-owner{background:var(--bg);padding:2px 6px;border-radius:4px;}
+.init-steps{font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;}
+.add-card-btn{width:100%;padding:6px;border:1.5px dashed var(--border);background:none;border-radius:8px;color:var(--muted);cursor:pointer;font-size:12px;margin-top:3px;}
+.add-card-btn:hover{border-color:var(--blue);color:var(--navy);}
+.opp-table{width:100%;border-collapse:collapse;}
+.opp-table th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);padding:8px 10px;text-align:left;border-bottom:2px solid var(--border);}
+.opp-table td{padding:9px 10px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:top;}
+.opp-table tr:hover td{background:rgba(89,169,255,0.04);}
+.prob-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;}
+.prob-high{background:#E6F4EA;color:#1E7E34;} .prob-mid{background:#FFF8E1;color:#B8860B;} .prob-low{background:#FEE2E2;color:#C62828;}
+.add-opp-btn{padding:6px 14px;background:var(--navy);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;}
+.empty-state{text-align:center;padding:24px;color:var(--muted);font-size:13px;}
+.am-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;}
+.am-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);}
+.am-agency{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:3px;}
+.am-person{font-size:13px;color:var(--text);margin-bottom:2px;}
+.am-email{font-size:12px;color:var(--blue);}
+.am-delete{float:right;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;}
+.am-delete:hover{color:var(--delete);}
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:1000;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--card);border-radius:14px;padding:26px;width:500px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.modal-title{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:18px;}
+.form-group{margin-bottom:12px;}
+.form-group label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);background:var(--bg);}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--blue);background:#fff;}
+.form-group textarea{min-height:65px;resize:vertical;}
+.form-group .readonly-val{padding:8px 11px;background:var(--bg);border-radius:8px;font-size:13px;color:var(--text);border:1.5px solid var(--border);}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;}
+.btn-secondary{padding:8px 16px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);}
+.btn-primary{padding:8px 16px;background:var(--navy);border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;}
+.btn-danger{padding:8px 16px;background:var(--delete);border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;margin-right:auto;}
+.comment-section{margin-top:14px;border-top:1px solid var(--border);padding-top:12px;}
+.comment-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;}
+.comment{background:var(--bg);border-radius:7px;padding:8px 10px;margin-bottom:6px;}
+.comment-author{font-size:11px;font-weight:700;color:var(--navy);}
+.comment-date{font-size:11px;color:var(--muted);}
+.comment-text{font-size:13px;margin-top:2px;}
+.comment-input-row{display:flex;gap:7px;margin-top:8px;}
+.comment-input-row input{flex:1;border:1.5px solid var(--border);border-radius:7px;padding:6px 10px;font-size:13px;}
+.comment-input-row button{padding:6px 13px;background:var(--blue);color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;}
+#loginScreen{position:fixed;inset:0;background:var(--navy);display:flex;align-items:center;justify-content:center;z-index:9999;}
+.login-box{background:#fff;border-radius:16px;padding:40px 36px;width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.25);}
+.login-logo{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:6px;} .login-logo span{color:var(--blue);}
+.login-subtitle{font-size:13px;color:var(--muted);margin-bottom:28px;}
+.login-input{width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:8px;font-size:15px;text-align:center;letter-spacing:2px;margin-bottom:12px;}
+.login-input:focus{outline:none;border-color:var(--blue);}
+.login-btn{width:100%;padding:11px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;}
+.login-error{color:#E53935;font-size:12px;margin-top:8px;min-height:16px;}
+</style>
+</head>
+<body>
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Tienda<span>nube</span> × Innovate</div>
+    <div class="login-subtitle">Enter your access code to continue</div>
+    <input class="login-input" id="loginInput" type="password" placeholder="••••••••••••••" maxlength="30"/>
+    <button class="login-btn" onclick="checkPassword()">Enter</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<div class="header">
+  <div>
+    <div class="logo">Tienda<span>nube</span> × Innovate</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px;">Bi-weekly Partner Board</div>
+  </div>
+  <div id="modeBadge" class="partner-badge">Partner View</div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" data-section="kpis">📊 KPIs</button>
+  <button class="nav-btn" data-section="initiatives">🗂 Initiatives</button>
+  <button class="nav-btn" data-section="opportunities">💼 Opportunities</button>
+  <button class="nav-btn" data-section="account-managers">👥 Account Managers</button>
+</div>
+
+<div class="main">
+  <div class="section active" id="section-kpis">
+    <div class="kpi-sync" id="kpiSyncBadge"></div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+  </div>
+  <div class="section" id="section-initiatives">
+    <p class="section-intro" id="initiativesIntro">Joint initiatives by QBR category.</p>
+    <div id="initiativesBoard"></div>
+  </div>
+  <div class="section" id="section-opportunities">
+    <p class="section-intro">Open opportunities in both directions.</p>
+    <div class="card">
+      <div class="card-title" id="tn2pTitle"><span>🔵 Tiendanube → Partner</span></div>
+      <table class="opp-table"><thead><tr><th>Merchant</th><th>Next Steps</th><th>Expected Close</th><th>Probability</th><th></th></tr></thead><tbody id="tn2pBody"></tbody></table>
+    </div>
+    <div class="card">
+      <div class="card-title" id="p2tnTitle"><span>🟢 Partner → Tiendanube</span></div>
+      <table class="opp-table"><thead><tr><th>Merchant</th><th>Next Steps</th><th>Expected Close</th><th>Probability</th><th></th></tr></thead><tbody id="p2tnBody"></tbody></table>
+    </div>
+  </div>
+  <div class="section" id="section-account-managers">
+    <div id="amAddRow" style="display:flex;justify-content:flex-end;margin-bottom:14px;"></div>
+    <div class="am-grid" id="amGrid"></div>
+  </div>
+</div>
+
+<!-- INITIATIVE MODAL -->
+<div class="modal-overlay" id="initModal">
+  <div class="modal">
+    <div class="modal-title" id="initModalTitle">Initiative</div>
+    <div id="initViewFields"></div>
+    <div id="initEditFields" style="display:none;">
+      <div class="form-group"><label>Title</label><input id="initTitle"/></div>
+      <div class="form-group"><label>Category</label><select id="initCategory"></select></div>
+      <div class="form-group"><label>Status</label><select id="initStatus"><option value="backlog">Backlog</option><option value="inprogress">In Progress</option><option value="done">Done</option></select></div>
+      <div class="form-group"><label>Next Steps</label><textarea id="initNextSteps"></textarea></div>
+      <div class="form-group"><label>Owner</label><input id="initOwner"/></div>
+      <div class="form-group"><label>Due Date</label><input id="initDue" type="date"/></div>
+    </div>
+    <div class="comment-section">
+      <div class="comment-title">Comments</div>
+      <div id="initCommentsList"></div>
+      <div class="comment-input-row"><input id="initCommentInput" placeholder="Add a comment…"/><button onclick="addComment()">Post</button></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-danger" id="initDeleteBtn" onclick="deleteInit()" style="display:none;">Delete</button>
+      <button class="btn-secondary" onclick="closeModal('initModal')">Close</button>
+      <button class="btn-primary" id="initSaveBtn" onclick="saveInit()" style="display:none;">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- OPP MODAL (admin only) -->
+<div class="modal-overlay" id="oppModal">
+  <div class="modal">
+    <div class="modal-title" id="oppModalTitle">Opportunity</div>
+    <div class="form-group"><label>Merchant / Account</label><input id="oppMerchant"/></div>
+    <div class="form-group"><label>Next Steps</label><textarea id="oppNextSteps"></textarea></div>
+    <div class="form-group"><label>Expected Close Date</label><input id="oppClose" type="date"/></div>
+    <div class="form-group"><label>Probability</label><select id="oppProb"><option value="high">High (&gt;70%)</option><option value="mid">Medium (30–70%)</option><option value="low">Low (&lt;30%)</option></select></div>
+    <div class="modal-actions">
+      <button class="btn-danger" id="oppDeleteBtn" onclick="deleteOpp()">Delete</button>
+      <button class="btn-secondary" onclick="closeModal('oppModal')">Cancel</button>
+      <button class="btn-primary" onclick="saveOpp()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- AM MODAL (admin only) -->
+<div class="modal-overlay" id="amModal">
+  <div class="modal">
+    <div class="modal-title">Account Manager</div>
+    <div class="form-group"><label>Agency / Account</label><input id="amAgency"/></div>
+    <div class="form-group"><label>Manager Name</label><input id="amPerson"/></div>
+    <div class="form-group"><label>Email (optional)</label><input id="amEmail" type="email"/></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('amModal')">Cancel</button>
+      <button class="btn-primary" onclick="saveAM()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── PARTNER CONFIG ───────────────────────────────────────────────────────
+const PARTNER_NAME = 'Innovate';
+const PARTNER_PWD  = 'innovate2026';
+const ADMIN_PWD    = 'tiendanube2026';
+const PWD_KEY      = 'tn_partner_auth_innovate';
+let IS_ADMIN = false;
+
+// ─── PRESET DATA ─────────────────────────────────────────────────────────
+const PRESET = {
+  hubspotSync: '2026-05-29',
+  kpis: {
+    closed_gmv: { ev_gmv:'ARS 400M', ev_opps:'1', sc_gmv:'—', sc_opps:'0',
+      ev_deals:['longviestore.com (Evolución)'], sc_deals:[] },
+    pipeline:   { ev_gmv:'ARS 464M', ev_opps:'4', sc_gmv:'—', sc_opps:'—' },
+    objective:  { ev_gmv:'', ev_opps:'', sc_gmv:'', sc_opps:'' }
+  },
+  initiatives: [
+    {id:'i1',title:'Summit Grupo Set',category:'enablement',status:'backlog',nextSteps:'',owner:'',due:'',comments:[]},
+    {id:'i2',title:'Social Media: Success Stories',category:'visibilidad',status:'backlog',nextSteps:'',owner:'',due:'',comments:[]},
+    {id:'i3',title:'Branding Support',category:'visibilidad',status:'backlog',nextSteps:'',owner:'',due:'',comments:[]},
+    {id:'i4',title:'MDF: Pocket Event',category:'visibilidad',status:'inprogress',nextSteps:'',owner:'',due:'',comments:[]},
+    {id:'i5',title:'Social Media: Success Story "Etiqueta Negra"',category:'visibilidad',status:'inprogress',nextSteps:'',owner:'',due:'',comments:[]},
+    {id:'i6',title:'Sponsorship: Tecnomoda',category:'visibilidad',status:'inprogress',nextSteps:'',owner:'',due:'',comments:[]},
+    {id:'i7',title:'Sponsorship: EDay',category:'visibilidad',status:'inprogress',nextSteps:'',owner:'',due:'',comments:[]},
+  ],
+  opportunities: {
+    tn2p:[{id:'o1',merchant:'B+D (Evolución)',nextSteps:'Checklist 1/1 done',close:'',prob:'high'},{id:'o2',merchant:'Wanama Kids (Evolución)',nextSteps:'',close:'',prob:'mid'},{id:'o3',merchant:'Ay Not Dead (Evolución)',nextSteps:'',close:'',prob:'mid'}],
+    p2tn:[{id:'o4',merchant:'Petenatti Hogar (Evolución)',nextSteps:'Checklist 1/2',close:'',prob:'mid'},{id:'o5',merchant:'Grupo La Celada (via Omni-Pill)',nextSteps:'',close:'',prob:'mid'},{id:'o6',merchant:'María Cher (via Omni-Pill)',nextSteps:'',close:'',prob:'mid'}]
+  },
+  accountManagers: []
+};
+
+const LS_KEY = 'tn_ops_data_v2_Innovate';
+function loadData() { try { const s=JSON.parse(localStorage.getItem(LS_KEY)); if(s) return s; } catch(e){} return PRESET; }
+function saveData(d) { d.lastSaved=new Date().toISOString(); localStorage.setItem(LS_KEY,JSON.stringify(d)); }
+let DATA = loadData();
+
+const CATS=[{id:'adquisicion',name:'Adquisición de Merchants',color:'#0050C3'},{id:'visibilidad',name:'Visibilidad de Marca Agencia',color:'#59A9FF'},{id:'enablement',name:'Enablement',color:'#7B61FF'},{id:'producto',name:'Producto',color:'#00A896'},{id:'otro',name:'Otro',color:'#9E9E9E'}];
+const KPI_DEFS=[{id:'closed_gmv',title:'Closed Monthly GMV YTD',unit:'Monthly GMV'},{id:'pipeline',title:'Open Pipeline',unit:'Monthly GMV'},{id:'objective',title:'Objective Q+1',unit:'Monthly GMV'}];
+
+let editingInitId=null, editingOppDir=null, editingOppId=null;
+
+function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));btn.classList.add('active');document.getElementById('section-'+btn.dataset.section).classList.add('active');}));
+
+// ─── KPIs ─────────────────────────────────────────────────────────────────
+function renderKPIs() {
+  const sync=document.getElementById('kpiSyncBadge');
+  sync.innerHTML=DATA.hubspotSync?`<span class="hs-badge">HubSpot</span> Snapshot as of ${DATA.hubspotSync}`:'KPI data — manually updated.';
+  const grid=document.getElementById('kpiGrid'); grid.innerHTML='';
+  KPI_DEFS.forEach(def=>{
+    const val=(DATA.kpis||{})[def.id]||{ev_gmv:'',ev_opps:'',sc_gmv:'',sc_opps:''};
+    const pv=(PRESET.kpis||{})[def.id]||{};
+    const isClosed=def.id==='closed_gmv', isPipeline=def.id==='pipeline';
+    const evDeals=isClosed?(val.ev_deals||pv.ev_deals||[]):[];
+    const scDeals=isClosed?(val.sc_deals||pv.sc_deals||[]):[];
+    const card=document.createElement('div'); card.className='kpi-card';
+    card.innerHTML=`<div class="kpi-card-title">${def.title}${isPipeline?' <span style="font-size:11px;font-weight:400;color:var(--muted)">(Details in Opportunities section)</span>':''}</div>
+    <div class="kpi-row">
+      <div class="kpi-cell"><div class="kpi-track">Evolución</div><div class="kpi-value">${val.ev_gmv||'—'}</div><div class="kpi-unit">${def.unit}</div><div class="kpi-opps"># Opps: <strong>${val.ev_opps||'—'}</strong></div>${evDeals.length?`<div style="margin-top:7px;border-top:1px solid var(--border);padding-top:6px;">${evDeals.map(d=>`<div style="font-size:11px;color:var(--text);padding:2px 0;">• ${escHtml(d)}</div>`).join('')}</div>`:''}</div>
+      <div class="kpi-cell"><div class="kpi-track">Escala</div><div class="kpi-value">${val.sc_gmv||'—'}</div><div class="kpi-unit">${def.unit}</div><div class="kpi-opps"># Opps: <strong>${val.sc_opps||'—'}</strong></div>${scDeals.length?`<div style="margin-top:7px;border-top:1px solid var(--border);padding-top:6px;">${scDeals.map(d=>`<div style="font-size:11px;color:var(--text);padding:2px 0;">• ${escHtml(d)}</div>`).join('')}</div>`:''}</div>
+    </div>
+    ${IS_ADMIN?`<div class="kpi-edit-grid"><div class="kpi-edit-group"><label>Evolución GMV</label><input value="${escHtml(val.ev_gmv)}" data-kid="${def.id}" data-field="ev_gmv"/></div><div class="kpi-edit-group"><label>Escala GMV</label><input value="${escHtml(val.sc_gmv)}" data-kid="${def.id}" data-field="sc_gmv"/></div><div class="kpi-edit-group"><label>Evolución # Opps</label><input value="${escHtml(val.ev_opps)}" data-kid="${def.id}" data-field="ev_opps"/></div><div class="kpi-edit-group"><label>Escala # Opps</label><input value="${escHtml(val.sc_opps)}" data-kid="${def.id}" data-field="sc_opps"/></div></div><button class="kpi-save-btn" data-kid="${def.id}">Save</button>`:''}`;
+    grid.appendChild(card);
+  });
+  if(IS_ADMIN) grid.querySelectorAll('.kpi-save-btn').forEach(btn=>btn.addEventListener('click',()=>{const kid=btn.dataset.kid;const inputs=grid.querySelectorAll(`input[data-kid="${kid}"]`);if(!DATA.kpis)DATA.kpis={};DATA.kpis[kid]={ev_gmv:inputs[0].value,sc_gmv:inputs[1].value,ev_opps:inputs[2].value,sc_opps:inputs[3].value};DATA.hubspotSync=null;saveData(DATA);renderKPIs();}));
+}
+
+// ─── INITIATIVES ──────────────────────────────────────────────────────────
+function renderInitiatives() {
+  const board=document.getElementById('initiativesBoard'); board.innerHTML='';
+  document.getElementById('initCategory').innerHTML=CATS.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  CATS.forEach(cat=>{
+    const items=(DATA.initiatives||[]).filter(i=>i.category===cat.id);
+    const block=document.createElement('div'); block.className='card';
+    block.innerHTML=`<div class="cat-header"><span class="cat-name"><span class="cat-icon" style="background:${cat.color}"></span>${cat.name}</span>${IS_ADMIN?`<button class="add-opp-btn" style="padding:4px 12px;font-size:12px;" onclick="openInitModal(null,'${cat.id}')">+ Add</button>`:''}</div>
+    <div class="kanban">${['backlog','inprogress','done'].map(st=>`<div class="kanban-col col-${st}"><div class="kanban-col-header">${{backlog:'Backlog',inprogress:'In Progress',done:'Done'}[st]}</div>${items.filter(i=>i.status===st).map(i=>initCardHTML(i)).join('')}${IS_ADMIN?`<button class="add-card-btn" onclick="openInitModal(null,'${cat.id}','${st}')">+ Add card</button>`:''}</div>`).join('')}</div>`;
+    board.appendChild(block);
+  });
+  board.querySelectorAll('.initiative-card').forEach(c=>c.addEventListener('click',()=>openInitModal(c.dataset.id)));
+}
+
+function initCardHTML(i){return`<div class="initiative-card" data-id="${i.id}"><div class="init-title">${escHtml(i.title)}</div>${i.owner?`<div class="init-meta"><span class="init-owner">👤 ${escHtml(i.owner)}</span>${i.due?`<span>📅 ${i.due}</span>`:''}</div>`:''} ${i.nextSteps?`<div class="init-steps">${escHtml(i.nextSteps.substring(0,80))}${i.nextSteps.length>80?'…':''}</div>`:''} ${(i.comments||[]).length?`<div class="init-meta" style="margin-top:4px;">💬 ${i.comments.length}</div>`:''}</div>`;}
+
+function openInitModal(id,dc,ds){
+  editingInitId=id||null;
+  const init=id?(DATA.initiatives||[]).find(i=>i.id===id):null;
+  document.getElementById('initModalTitle').textContent=id?(IS_ADMIN?'Edit Initiative':'Initiative Details'):'New Initiative';
+  document.getElementById('initDeleteBtn').style.display=(id&&IS_ADMIN)?'inline-block':'none';
+  document.getElementById('initSaveBtn').style.display=IS_ADMIN?'inline-block':'none';
+  if(IS_ADMIN){
+    document.getElementById('initViewFields').style.display='none';
+    document.getElementById('initEditFields').style.display='block';
+    document.getElementById('initTitle').value=init?init.title:'';
+    document.getElementById('initCategory').value=init?init.category:(dc||CATS[0].id);
+    document.getElementById('initStatus').value=init?init.status:(ds||'backlog');
+    document.getElementById('initNextSteps').value=init?init.nextSteps:'';
+    document.getElementById('initOwner').value=init?init.owner:'';
+    document.getElementById('initDue').value=init?init.due||'':'';
+  } else {
+    document.getElementById('initEditFields').style.display='none';
+    document.getElementById('initViewFields').style.display='block';
+    document.getElementById('initViewFields').innerHTML=init?`
+      <div style="margin-bottom:14px;">
+        <div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:10px;">${escHtml(init.title)}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+          <span style="background:var(--backlog-bg);color:var(--backlog-text);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;">${{backlog:'Backlog',inprogress:'In Progress',done:'Done'}[init.status]}</span>
+          ${init.owner?`<span style="background:var(--bg);padding:3px 10px;border-radius:20px;font-size:12px;">👤 ${escHtml(init.owner)}</span>`:''}
+          ${init.due?`<span style="background:var(--bg);padding:3px 10px;border-radius:20px;font-size:12px;">📅 ${init.due}</span>`:''}
+        </div>
+        ${init.nextSteps?`<div style="background:var(--bg);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--text);">${escHtml(init.nextSteps)}</div>`:''}
+      </div>`:'';
+  }
+  renderComments(init?init.comments||[]:[]);
+  openModal('initModal');
+}
+
+function renderComments(comments){document.getElementById('initCommentsList').innerHTML=comments.map(c=>`<div class="comment"><span class="comment-author">${escHtml(c.author)}</span> <span class="comment-date">· ${new Date(c.ts).toLocaleDateString('es-AR')}</span><div class="comment-text">${escHtml(c.text)}</div></div>`).join('')||'<div style="color:var(--muted);font-size:12px;margin-bottom:6px;">No comments yet.</div>';}
+
+function addComment(){const input=document.getElementById('initCommentInput');const text=input.value.trim();if(!text||!editingInitId)return;const init=DATA.initiatives.find(i=>i.id===editingInitId);if(!init)return;if(!init.comments)init.comments=[];init.comments.push({author:IS_ADMIN?'Tiendanube Team':PARTNER_NAME,text,ts:new Date().toISOString()});saveData(DATA);renderComments(init.comments);input.value='';}
+
+function saveInit(){if(!IS_ADMIN)return;const title=document.getElementById('initTitle').value.trim();if(!title){alert('Please enter a title.');return;}const obj={id:editingInitId||'init_'+Date.now(),title,category:document.getElementById('initCategory').value,status:document.getElementById('initStatus').value,nextSteps:document.getElementById('initNextSteps').value.trim(),owner:document.getElementById('initOwner').value.trim(),due:document.getElementById('initDue').value,comments:editingInitId?((DATA.initiatives||[]).find(i=>i.id===editingInitId)||{}).comments||[]:[],};if(!DATA.initiatives)DATA.initiatives=[];if(editingInitId){const idx=DATA.initiatives.findIndex(i=>i.id===editingInitId);if(idx!==-1)DATA.initiatives[idx]=obj;}else DATA.initiatives.push(obj);saveData(DATA);closeModal('initModal');renderInitiatives();}
+
+function deleteInit(){if(!IS_ADMIN||!editingInitId||!confirm('Delete?'))return;DATA.initiatives=DATA.initiatives.filter(i=>i.id!==editingInitId);saveData(DATA);closeModal('initModal');renderInitiatives();}
+
+// ─── OPPORTUNITIES ────────────────────────────────────────────────────────
+function renderOpportunities(){renderOppTable('tn2p');renderOppTable('p2tn');}
+function renderOppTable(dir){
+  const body=document.getElementById(dir+'Body');
+  const opps=(DATA.opportunities||{})[dir]||[];
+  const titleEl=document.getElementById(dir+'Title');
+  if(IS_ADMIN) titleEl.innerHTML=`<span>${dir==='tn2p'?'🔵 Tiendanube → Partner':'🟢 Partner → Tiendanube'}</span><button class="add-opp-btn" onclick="openOppModal('${dir}')">+ Add</button>`;
+  body.innerHTML=opps.length?opps.map(o=>`<tr><td><strong>${escHtml(o.merchant)}</strong></td><td>${escHtml(o.nextSteps||'')}</td><td>${o.close||'—'}</td><td><span class="prob-badge prob-${o.prob}">${{high:'High',mid:'Medium',low:'Low'}[o.prob]}</span></td><td>${IS_ADMIN?`<button style="background:none;border:none;cursor:pointer;color:var(--muted)" onclick="openOppModal('${dir}','${o.id}')">✏️</button>`:''}</td></tr>`).join(''):`<tr><td colspan="5" class="empty-state">No opportunities yet.</td></tr>`;
+}
+function openOppModal(dir,id){if(!IS_ADMIN)return;editingOppDir=dir;editingOppId=id||null;const opp=id?((DATA.opportunities||{})[dir]||[]).find(o=>o.id===id):null;document.getElementById('oppModalTitle').textContent=(id?'Edit':'New')+' Opportunity — '+(dir==='tn2p'?'TN → Partner':'Partner → TN');document.getElementById('oppMerchant').value=opp?opp.merchant:'';document.getElementById('oppNextSteps').value=opp?opp.nextSteps:'';document.getElementById('oppClose').value=opp?opp.close||'':'';document.getElementById('oppProb').value=opp?opp.prob:'mid';document.getElementById('oppDeleteBtn').style.display=id?'inline-block':'none';openModal('oppModal');}
+function saveOpp(){if(!IS_ADMIN)return;const merchant=document.getElementById('oppMerchant').value.trim();if(!merchant){alert('Please enter a merchant name.');return;}const obj={id:editingOppId||'opp_'+Date.now(),merchant,nextSteps:document.getElementById('oppNextSteps').value.trim(),close:document.getElementById('oppClose').value,prob:document.getElementById('oppProb').value};if(!DATA.opportunities)DATA.opportunities={tn2p:[],p2tn:[]};if(!DATA.opportunities[editingOppDir])DATA.opportunities[editingOppDir]=[];if(editingOppId){const idx=DATA.opportunities[editingOppDir].findIndex(o=>o.id===editingOppId);if(idx!==-1)DATA.opportunities[editingOppDir][idx]=obj;}else DATA.opportunities[editingOppDir].push(obj);saveData(DATA);closeModal('oppModal');renderOpportunities();}
+function deleteOpp(){if(!IS_ADMIN||!editingOppId||!confirm('Delete?'))return;DATA.opportunities[editingOppDir]=DATA.opportunities[editingOppDir].filter(o=>o.id!==editingOppId);saveData(DATA);closeModal('oppModal');renderOpportunities();}
+
+// ─── ACCOUNT MANAGERS ─────────────────────────────────────────────────────
+function renderAMs(){
+  const grid=document.getElementById('amGrid');
+  const ams=DATA.accountManagers||[];
+  document.getElementById('amAddRow').innerHTML=IS_ADMIN?`<button class="add-opp-btn" onclick="openModal('amModal')">+ Add Account</button>`:'';
+  grid.innerHTML=ams.length?ams.map(am=>`<div class="am-card">${IS_ADMIN?`<button class="am-delete" onclick="deleteAM('${am.id}')">×</button>`:''}<div class="am-agency">${escHtml(am.agency)}</div><div class="am-person">👤 ${escHtml(am.person)}</div>${am.email?`<div class="am-email">✉️ ${escHtml(am.email)}</div>`:''}</div>`).join(''):`<div class="empty-state" style="grid-column:1/-1;">No accounts listed yet.</div>`;
+}
+function saveAM(){if(!IS_ADMIN)return;const agency=document.getElementById('amAgency').value.trim();const person=document.getElementById('amPerson').value.trim();if(!agency||!person){alert('Please fill in all fields.');return;}if(!DATA.accountManagers)DATA.accountManagers=[];DATA.accountManagers.push({id:'am_'+Date.now(),agency,person,email:document.getElementById('amEmail').value.trim()});saveData(DATA);closeModal('amModal');renderAMs();}
+function deleteAM(id){if(!IS_ADMIN||!confirm('Remove?'))return;DATA.accountManagers=DATA.accountManagers.filter(a=>a.id!==id);saveData(DATA);renderAMs();}
+
+// ─── PASSWORD ─────────────────────────────────────────────────────────────
+function checkPassword(){
+  const val=document.getElementById('loginInput').value;
+  if(val===ADMIN_PWD){IS_ADMIN=true;localStorage.setItem(PWD_KEY,'admin');document.getElementById('loginScreen').style.display='none';applyMode();}
+  else if(val===PARTNER_PWD){IS_ADMIN=false;localStorage.setItem(PWD_KEY,'partner');document.getElementById('loginScreen').style.display='none';applyMode();}
+  else{document.getElementById('loginError').textContent='Incorrect code. Please try again.';document.getElementById('loginInput').value='';document.getElementById('loginInput').focus();}
+}
+function applyMode(){
+  const badge=document.getElementById('modeBadge');
+  if(IS_ADMIN){badge.textContent='🔐 Admin View';badge.className='admin-badge';}
+  else{badge.textContent='Partner View';badge.className='partner-badge';}
+  renderAll();
+}
+function renderAll(){renderKPIs();renderInitiatives();renderOpportunities();renderAMs();}
+document.getElementById('loginInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkPassword();});
+const stored=localStorage.getItem(PWD_KEY);
+if(stored==='admin'){IS_ADMIN=true;document.getElementById('loginScreen').style.display='none';applyMode();}
+else if(stored==='partner'){IS_ADMIN=false;document.getElementById('loginScreen').style.display='none';applyMode();}
+</script>
+</body>
+</html>
