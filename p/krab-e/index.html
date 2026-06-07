@@ -619,7 +619,7 @@ function renderOppTable(dir){
   }
   body.innerHTML=opps.length?opps.map(o=>`
     <tr>
-      <td><span class="merchant-name">${esc(o.merchant)}</span>${o.source==='hubspot'?'<span style="font-size:10px;background:#FF7A59;color:#fff;padding:1px 6px;border-radius:10px;font-weight:700;margin-left:5px;vertical-align:middle;">HS</span>':''\}</td>
+      <td><span class="merchant-name">${esc(o.merchant)}</span>${o.source==='hubspot'?'<span style="font-size:10px;background:#FF7A59;color:#fff;padding:1px 6px;border-radius:10px;font-weight:700;margin-left:5px;vertical-align:middle;">HS</span>':''}</td>
       <td style="color:var(--muted);max-width:220px;">${esc(o.nextSteps||'—')}</td>
       <td style="color:var(--muted);">${o.close||'—'}</td>
       <td><span class="prob-badge prob-${o.prob}">${PROB_LABELS[o.prob]}</span></td>
